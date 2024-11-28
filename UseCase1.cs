@@ -31,7 +31,7 @@ namespace ExampleProject
             ///</notice>
             if (List1 != null && List1.Records != null)
             {
-                if (List1?.Records?.Count > 0)
+                if (List1?.Records?.Count > 0) // throws Entry Point Not Found error here
                 {
                     Debug.WriteLine("I have passed Entry Point error");
                 }
