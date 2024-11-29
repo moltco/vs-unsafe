@@ -113,16 +113,29 @@ namespace ExampleProject
                 ISelectable,
                 new()
     {
+
         BindingList<IListEntry> IListManager<IListEntry>.Records
         {
-            get => Unsafe.As<BindingList<IListEntry>>(Records);
-            set => Records = Unsafe.As<BindingList<TRec>>(value);
+            get => Records as BindingList<IListEntry>;
+            set => Records = value as BindingList<TRec>;
         }
+        
+        // was:
+        // BindingList<IListEntry> IListManager<IListEntry>.Records
+        // {
+        //    get => Unsafe.As<BindingList<IListEntry>>(Records);
+        //    set => Records = Unsafe.As<BindingList<TRec>>(value);
+        // }
+
+        ICollection<IListEntry> IFilterProvider<IListEntry>.FiltersApply()
+            => (ICollection<IListEntry>)FiltersApply();
+
+        //ICollection<IListEntry> IFilterProvider<IListEntry>.FiltersApply()
+        //    => Unsafe.As<ICollection<IListEntry>>(FiltersApply());
+
         ISupportedFile<IListEntry> IListManager<IListEntry>.File { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         IListEntry IListManager<IListEntry>.CurrentRecord { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        ICollection<IListEntry> IFilterProvider<IListEntry>.FiltersApply()
-            => Unsafe.As<ICollection<IListEntry>>(FiltersApply());
 
         void IFilterProvider<IListEntry>.FiltersClear() => FiltersClear();
 
@@ -140,6 +153,7 @@ namespace ExampleProject
     /// </summary>
     public class ExampleListManager :
          ListManagerWFO<ExampleListEntry>,
+         //IListManager<IListEntry>,
          IUndo<ExampleListEntry>,
          IFilterProvider<ExampleListEntry>
     {
